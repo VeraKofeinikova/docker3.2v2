@@ -2,47 +2,54 @@ package page;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.By;
+import helpers.DataHelper;
+import helpers.SqlCommands;
 
 import java.sql.SQLException;
 
+import org.openqa.selenium.By;
+
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.sleep;
 
 public class VerificationPage {
-    private SelenideElement codeField = $(".input__control");
-    private SelenideElement verifyButton = $("[data-test-id=action-verify]");
-    private SelenideElement errorNotification = $(By.className("notification__content"));
+    private static final SelenideElement codeField = $(".input__control");
+    private static final SelenideElement verifyButton = $("[data-test-id='action-verify']");
+    private static final SelenideElement errorNotification = $(By.className("notification__content"));
+    private static final SelenideElement errorNotificationTwo = $("[data-test-id=error-notification]");
+    private static final SelenideElement emptyCodeField = $(".input__sub");
 
     public VerificationPage() {
         codeField.shouldBe(visible);
     }
 
-    public DashboardPage validVerify(DataHelper.VerificationCode verificationCode) {
-        codeField.setValue(DataHelper.getVerificationCodeFor().getCode());
+    public DashboardPage validVerify() throws SQLException {
+        codeField.setValue(SqlCommands.getVerificationCode(SqlCommands.getId(DataHelper.getCorrectAuthInfo().getLogin())));
         verifyButton.click();
         return new DashboardPage();
     }
 
-    public VerificationPage notValidVerify(DataHelper.VerificationCode verificationCode) {
-        codeField.setValue(DataHelper.getWrongVerificationCodeFor().getCode());
+    public void notValidVerify() {
+        DataHelper.VerificationCode wrongVerificationCode = DataHelper.getWrongVerificationCodeFor();
+        codeField.setValue(wrongVerificationCode.getCode());
         verifyButton.click();
-        errorNotification.waitUntil(Condition.visible,5000).shouldHave(text("Неверно указан код"));
-        return new VerificationPage();
+        errorNotification.shouldHave(Condition.visible);
+        errorNotificationTwo.shouldHave(text("Ошибка! "));
+    }
+
+    public void warningOfEmptyCodeField() {
+        verifyButton.click();
+        emptyCodeField.shouldHave(Condition.text("Поле обязательно для заполнения"));
     }
 
     public void assertVerifyBtnAvailable() {
         verifyButton.shouldBe(visible);
     }
 
-    public VerificationPage tooMuchAttemptsOfVerificationCode(DataHelper.VerificationCode verificationCode4) {
-        codeField.setValue(DataHelper.getWrongVerificationCodeFor().getCode());
-        verifyButton.click();
-        errorNotification.waitUntil(Condition.visible,15000).shouldHave(text("Превышено количество попыток ввода кода"));
-        return new VerificationPage();
-    }
+//    public void fourthTryToLogin() throws SQLException {
+//        codeField.setValue(SqlCommands.getVerificationCode(SqlCommands.getId(DataHelper.getCorrectAuthInfo().getLogin())));
+//        verifyButton.click();
+//        errorNotification.waitUntil(Condition.visible,15000).shouldHave(text("Ошибка"));
+//    }
 }
-
-
 

@@ -1,24 +1,11 @@
 package helpers;
 
-
 import lombok.Value;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 
 public class DataHelper {
-
-    @Value
-
-    public static class AuthInfo {
-        private String login;
-        private String password;
-    }
-
-    @Value
-    public static class VerificationCode {
-        private String code;
-    }
-
-
     public static AuthInfo getCorrectAuthInfo() {
         return new AuthInfo("vasya", "qwerty123");
     }
@@ -26,9 +13,11 @@ public class DataHelper {
     public static AuthInfo getWrongAuthInfoOne() {
         return new AuthInfo("vasya", "qwerty12");
     }
+
     public static AuthInfo getWrongAuthInfoTwo() {
         return new AuthInfo("", "qwerty1");
     }
+
     public static AuthInfo getWrongAuthInfoThree() {
         return new AuthInfo("", "qwerty");
     }
@@ -49,11 +38,18 @@ public class DataHelper {
         return new AuthInfo("vasya", "");
     }
 
-    public static VerificationCode getVerificationCodeFor() {
-        return new VerificationCode("12345");
+    public static VerificationCode getWrongVerificationCodeFor() {
+        return new VerificationCode("123456");
     }
 
-    public static VerificationCode getWrongVerificationCodeFor() {
-        return new VerificationCode("23456");
+    @Value
+    public static class AuthInfo {
+        private String login;
+        private String password;
+    }
+
+    @Value
+    public static class VerificationCode {
+        private String code;
     }
 }

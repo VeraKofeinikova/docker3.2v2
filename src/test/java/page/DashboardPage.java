@@ -7,8 +7,8 @@ import static com.codeborne.selenide.Selenide.$;
 
 public class DashboardPage {
     private static final SelenideElement text = $("[data-test-id='dashboard']");
-
-    public DashboardPage() {
+    //checkPage было - стало loginSuccessful
+    public void goToDashboardPage() {
         text.shouldHave(Condition.text("Личный кабинет"));
     }
 }

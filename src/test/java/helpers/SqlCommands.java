@@ -19,20 +19,26 @@ public class SqlCommands {
         }
     }
 
-    public static String getAuthCode(String id) throws SQLException {
+    public static String getVerificationCode(String id) throws SQLException {
         try (Connection cn = MakeConnection.getConnection();
              PreparedStatement st = cn.prepareStatement("SELECT code FROM auth_codes WHERE user_id = ? ORDER BY created;")
         ) {
             st.setString(1, id);
             try (ResultSet rs = st.executeQuery()) {
-                //ArrayList<String> codes = new ArrayList<>();
+                ArrayList<String> codes = new ArrayList<>();
                 while (rs.next()) {
-                    return rs.getString("code");
-                    //codes.add(rs.getString("code"));
+                    codes.add(rs.getString("code"));
                 }
-                //return codes.get(codes.size() - 1);
-                return null;
+                return codes.get(codes.size() - 1);
             }
+        }
+    }
+
+    public static void clearVerificationCodes() throws SQLException {
+        try (Connection cn = MakeConnection.getConnection();
+             Statement st = cn.createStatement()
+        ) {
+            st.execute("TRUNCATE TABLE auth_codes;");
         }
     }
 
