@@ -11,13 +11,13 @@ java -jar app-deadline.jar -P:jdbc.url=jdbc:mysql://localhost:3306/mysqldb -P:jd
 (но можно и просто лишний раз запустить тесты - там настроена вычистка таблиц после прогона
 тестов):
 
-   а)Зайти в оболочку mysql:
-      sudo docker-compose exec mysql mysql -u appuser mysqldb -p
-      Сначала пароль от машины
-      Потом пароль от базы данных - yes
+   а) Зайти в оболочку mysql:
+      1.sudo docker-compose exec mysql mysql -u appuser mysqldb -p
+      2.Сначала пароль от машины
+      3.Потом пароль от базы данных - yes
 
    б) Команды зачистки:
-      truncate auth_codes;
-      truncate cards;
-      truncate card_transactions;
-      DELETE FROM users WHERE id IS NOT NULL;
+      1.truncate auth_codes;
+      2.truncate cards;
+      3.truncate card_transactions;
+      4.DELETE FROM users WHERE id IS NOT NULL;
